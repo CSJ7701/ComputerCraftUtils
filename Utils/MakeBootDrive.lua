@@ -7,7 +7,7 @@ local v = require("cc.expect")
 local ghApiBase = "https://api.github.com/repos/"
 local coreRepo = "CSJ7701/ComputerCraftUtils"
 local ref = "main"
-local bootloaderApiUrl = ghApiBase .. coreRepo .. "/contents/Bootloader?ref=" .. ref
+local bootdriveApiUrl = ghApiBase .. coreRepo .. "/contents/Bootdrive?ref=" .. ref
 
 -- Makes a trial request, verifies the response code, and returns the response.
 local function getAndCheck(url)
@@ -63,7 +63,7 @@ local function fetchAndDownloadDirectory(apiUrl, localPath)
                 fs.makeDir(fullLocalPath)
             end
             -- Construct the API URL for the directory and fetch its contents
-            local dirApiUrl = apiUrl:gsub("Bootloader", "Bootloader/" .. itemName)
+            local dirApiUrl = apiUrl:gsub("Bootdrive", "Bootdrive/" .. itemName)
             fetchAndDownloadDirectory(dirApiUrl, fullLocalPath)
         end
     end
@@ -98,8 +98,8 @@ local function main()
        fs.makeDir(basePath)
     end
 
-    -- Fetch and download bootloader directory
-    fetchAndDownloadDirectory(bootloaderApiUrl, basePath)
+    -- Fetch and download bootdrive directory
+    fetchAndDownloadDirectory(bootdriveApiUrl, basePath)
 end
 
 if clearDisk() == 1 then
