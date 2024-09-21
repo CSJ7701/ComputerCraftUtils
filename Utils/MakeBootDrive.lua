@@ -50,22 +50,37 @@ local function fetchAndDownloadDirectory(apiUrl, localPath)
     local body = r.readAll()
     r.close()
 
+    -- Extract the base url (everything up to and including "Bootdrive")
+    local baseUrl = apiUrl:match("(.*/Bootdrive)")
+    if not baseUrl then
+       error("Unable to find 'Bootdrive' in the API URL: "..apiUrl)
+    end
+
     -- Extract entries and download files or recurse for directories
-    for itemType, downloadUrl, itemName in string.gmatch(body, '"type":%s-"(.-)".-"download_url":%s-"(.-)".-"name":%s-"(.-)"') do
-        local fullLocalPath = fs.combine(localPath, itemName)
+    for item in body:gmatch('%b{}') do
+       local itemType = item:match('"type"%s*:%s*"(%w+)"')
+       local itemName = item:match('"name"%s*:%s*"([^"]+)"')
+       local itemPath = item:match('"path"%s*:%s*"([^"]+)"')
+       local downloadUrl = item:match('"download_url"%s*:%s*"([^"]+)"')
+
+       if itemType and itemName and itemPath then
+	  local fullLocalPath = fs.combine(localPath, itemName)
         
-        if itemType == "file" then
-            -- Download the file
-            download(downloadUrl, fullLocalPath)
-        elseif itemType == "dir" then
-            -- Create the directory locally and recurse into it
-            if not fs.exists(fullLocalPath) then
+	  if itemType == "file" then
+	     -- Download the file
+	     download(downloadUrl, fullLocalPath)
+	  elseif itemType == "dir" then
+	     -- Create the directory locally and recurse into it
+	     if not fs.exists(fullLocalPath) then
                 fs.makeDir(fullLocalPath)
-            end
-            -- Construct the API URL for the directory and fetch its contents
-            local dirApiUrl = apiUrl:gsub("Bootdrive", "Bootdrive/" .. itemName)
+	     end
+	     -- Construct the API URL for the directory and fetch its contents
+	     local relativePath = itemPath:match("Bootdrive/(.+)") or itemPath
+	     local dirApiUrl = baseUrl .. "/" .. relativePath
+	    print("[LOG] -- Downloading subdirectory: "..itemName)
             fetchAndDownloadDirectory(dirApiUrl, fullLocalPath)
-        end
+	  end
+       end
     end
 end
 
