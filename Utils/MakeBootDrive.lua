@@ -6,7 +6,7 @@ local v = require("cc.expect")
 
 local ghBase = "https://raw.githubusercontent.com/"
 local coreRepo = "CSJ7701/ComputerCraftUtils"
-local ref = "refs/heads/master"
+local ref = "main"
 local baseUrl = ghBase..coreRepo.."/"..ref
 
 
@@ -61,7 +61,7 @@ end
 
 local function main()
    local basePath = "/disk"
-   download(baseUrl.."Bootdrive",basePath.."Bootdrive/")
+   download(baseUrl.."/Bootdrive",basePath.."/Bootdrive/")
 end
 
 
