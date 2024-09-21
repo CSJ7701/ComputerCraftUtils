@@ -45,7 +45,8 @@ local function clearDisk()
 
    -- Check whether there is a disk connected
    if not (fs.exists(path)) then
-      result = -1
+      print("[Fatal Error] -- No disk connected.")
+      return -1
    else
       local files = fs.list(path)
       -- Delete all files on disk
@@ -54,9 +55,17 @@ local function clearDisk()
 	 fs.delete(fullPath)
       end
    end
+   print("[Success] -- Disk wiped")
+   return 1
 end
-
 
 local function main()
    local basePath = "/disk"
-   download(baseUrl..
+   download(baseUrl.."Bootdrive",basePath.."Bootdrive/")
+end
+
+
+if clearDisk() == 1 then
+   print("[LOG] -- Attempting Download")
+   main()
+end
