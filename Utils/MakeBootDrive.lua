@@ -51,7 +51,7 @@ local function clearDisk()
       local files = fs.list(path)
       -- Delete all files on disk
       for _, file in ipairs(files) do
-	 local fullPath = fs.combine(Path, file)
+	 local fullPath = fs.combine(path, file)
 	 fs.delete(fullPath)
       end
    end
