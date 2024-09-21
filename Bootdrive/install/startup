@@ -1,0 +1,12 @@
+term.clear()
+term.setCursorPos(22,8)
+shell.setPath(shell.path()..":/bin")
+print("CreateOS")
+term.setCursorPos(21,9)
+print("Loading...")
+term.setCursorPos(20,10)
+sleep(1)
+textutils.slowPrint("############")
+sleep(1)
+shell.run("menu")
+

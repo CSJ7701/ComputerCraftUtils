@@ -1,0 +1,11 @@
+term.clear()
+term.setCursorPos(1,1)
+if fs.exists("install") then
+   shell.run("delete","install")
+end
+if fs.exists("eject") then
+   shell.run("delete","eject")
+end
+shell.run("cp","disk/install.lua","install")
+shell.run("cp","disk/eject","eject")
+print("First Time Installation? Type 'install' to begin. If not, type 'eject'.")

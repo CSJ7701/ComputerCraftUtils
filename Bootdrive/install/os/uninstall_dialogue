@@ -1,0 +1,69 @@
+os.pullEvent = os.pullEventRaw
+
+local w,h = term.getSize()
+
+function printCentered(y,s)
+   local x = math.floor((w-string.len(s)) / 2)
+   term.setCursorPos(x,y)
+   term.clearLine()
+   term.write(s)
+end
+
+local nOption = 1
+
+local function drawMenu()
+   term.clear()
+   term.setCursorPos(1,1)
+   term.write("Uninstall")
+
+   term.setCursorPos(w-11,1)
+   if nOption ==1 then
+      term.write("Confirm")
+   elseif nOption == 2 then
+      term.write("Back")
+   else
+   end
+end
+
+-- GUI
+term.clear()
+local function drawFrontend()
+   printCentered(math.floor(h/2)-3,"")
+   printCentered(math.floor(h/2)-2,"Are you sure you want to uninstall?")
+   printCentered(math.floor(h/2)-1,"")
+   printCentered(math.floor(h/2)-0, ((nOption == 1) and "[  Confirm  ]") or "   Confirm   ")
+   printCentered(math.floor(h/2)+1, ((nOption == 2) and "[   Back    ]") or "    Back     ")
+   printCentered(math.floor(h/2)+2,"")
+end
+
+-- Display
+drawMenu()
+drawFrontend()
+
+
+while true do
+   local e,p = os.pullEvent("key")
+   if p == keys.up then
+      if nOption > 1 then
+	 nOption = nOption - 1
+	 drawMenu()
+	 drawFrontend()
+      end
+   elseif p == keys.down then
+      if nOption < 4 then
+	 nOption = nOption + 1
+	 drawMenu()
+	 drawFrontend()
+      end
+   elseif p == keys.enter then
+      break
+   end
+end
+term.clear()
+
+-- Conditions
+if nOption == 1 then
+   shell.run("os/.uninstall")
+else
+   shell.run("menu")
+end
