@@ -1,9 +1,7 @@
-local json = require("json")
-
 local ghApiBase = "https://api.github.com/repos/"
 local coreRepo = "CSJ7701/ComputerCraftUtils"
 local ref = "main"
-local folderApiUrl = ghApiBase .. coreRepo .. "/contents/Bootloader?ref=" .. ref
+local bootloaderApiUrl = ghApiBase .. coreRepo .. "/contents/Bootloader?ref=" .. ref
 
 -- Makes a trial request, verifies the response code, and returns the response.
 local function getAndCheck(url)
@@ -44,17 +42,14 @@ local function fetchDirectoryContents()
     end
     
     local body = r.readAll()
-    local response = json.decode(body)
-    if not response then
-        error("Failed to parse JSON response")
-    end
-    
-    -- Extract the download URLs for files
+    r.close()
+
+    -- Initialize empty table for file URLs
     local files = {}
-    for _, item in ipairs(response) do
-        if item.type == "file" then
-            table.insert(files, item.download_url)
-        end
+
+    -- Extract all 'download_url' entries
+    for url in string.gmatch(body, '"download_url":%s-"(.-)"') do
+       table.insert(files,url)
     end
     
     return files
