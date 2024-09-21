@@ -91,14 +91,15 @@ end
 
 -- Modify main function to use fetched files
 local function main()
-    local basePath = "/disk/Bootdrive/"
-    local files = fetchDirectoryContents()
+    local basePath = "/disk/"
 
-    for _, fileUrl in ipairs(files) do
-        -- Extract file name from URL (the last part of the URL path)
-        local fileName = fileUrl:match("^.+/(.+)$")
-        download(fileUrl, basePath .. fileName)
+    -- Ensure base directory exists
+    if not fs.exists(basePath) then
+       fs.makeDir(basePath)
     end
+
+    -- Fetch and download bootloader directory
+    fetchAndDownloadDirectory(bootloaderApiUrl, basePath)
 end
 
 if clearDisk() == 1 then
