@@ -129,12 +129,13 @@ local function main_install()
    fs.copy("/OS_INSTALL/install/os","/os")
    fs.copy("/OS_INSTALL/install/startup","/startup")
 
-   ---clearDisk()
+   clearDisk()
 end
 
 if clearDisk() == 1 then
    print("[LOG] -- Attempting Download")
    main_download()
+   main_install()
 else
    print("[LOG] -- Download aborted, /OS_INSTALL could not be cleared.")
 end
