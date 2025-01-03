@@ -134,7 +134,7 @@ local function main_install()
 end
 
 -- Dictionary of default environment variables and their values
-local env_defaults = { ["createos.repo"] = "https://raw.githubusercontent.com/CSJ7701/ComputerCraftUtils", ["createos.module_dir"] = "/Modules/"}
+local env_defaults = {["createos.repo"] = "https://raw.githubusercontent.com/CSJ7701/ComputerCraftUtils", ["createos.module_dir"] = "/Modules/"}
 
 -- Function to check and set environment variables
 local function env_setup()
