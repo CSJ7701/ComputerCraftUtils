@@ -134,13 +134,10 @@ local function main_install()
 end
 
 -- Dictionary of default environment variables and their values
-local env_defaults = {
-   createos.repo = "https://raw.githubusercontent.com/CSJ7701/ComputerCraftUtils",
-   createos.module_dir = "/Modules/",
-}
+local env_defaults = {createos.repo = "https://raw.githubusercontent.com/CSJ7701/ComputerCraftUtils", createos.module_dir = "/Modules/"}
 
 -- Function to check and set environment variables
-local function ensure_env_variables()
+local function env_setup()
     for var_name, default_value in pairs(env_defaults) do
         -- Check if the variable already has a value
        local current_value = settings.get(var_name)  -- os.getenv retrieves the environment variable value
@@ -154,13 +151,11 @@ local function ensure_env_variables()
     end
 end
 
-local function env_setup()
-   
-
 if clearDisk() == 1 then
    print("[LOG] -- Attempting Download")
    main_download()
    main_install()
+   env_setup()
 else
    print("[LOG] -- Download aborted, /OS_INSTALL could not be cleared.")
 end
