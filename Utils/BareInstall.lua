@@ -160,7 +160,7 @@ local function env_setup()
       end
    end
 
-   for var_name, var_val in pairs(env_defaults) do
+   for var_name, var_val in pairs(env_addons) do
       local current_value = settings.get(var_name)
       if current_value or not current_value == "" then
 	 settings.set(var_name, current_value .. ";" .. var_val)
