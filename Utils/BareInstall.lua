@@ -137,7 +137,7 @@ end
 
 -- Function to check and set environment variables
 local function env_setup()
-   local env_defaults = {["createos.repo"] = "https://raw.githubusercontent.com/CSJ7701/ComputerCraftUtils", ["createos.module_dir"] = "/Modules/"}
+   local env_defaults = {["createos.repo"] = "https://raw.githubusercontent.com/CSJ7701/ComputerCraftUtils/", ["createos.branch"] = "main", ["createos.module_dir"] = "/Modules/"}
    for var_name, default_value in pairs(env_defaults) do
       -- Check if the variable already has a value
       local current_value = settings.get(var_name)  -- os.getenv retrieves the environment variable value
