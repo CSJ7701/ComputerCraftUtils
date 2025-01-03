@@ -130,6 +130,7 @@ local function main_install()
    fs.copy("/OS_INSTALL/install/startup","/startup")
 
    clearDisk()
+   fs.delete("OS_INSTALL")
 end
 
 if clearDisk() == 1 then
