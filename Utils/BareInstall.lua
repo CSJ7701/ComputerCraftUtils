@@ -103,7 +103,7 @@ local function clearDisk()
 end
 
 local function main_install()
-   local basepath = "/OS_INSTALL/"
+   local basePath = "/OS_INSTALL/"
 
    -- Ensure base directory exists
    if not fs.exists(basePath) then
