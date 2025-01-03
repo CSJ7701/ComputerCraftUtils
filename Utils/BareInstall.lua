@@ -126,10 +126,10 @@ local function main_install()
    end
 
    if not fs.exists("modules") then
-      fs.makeDir("modules")
+      fs.makeDir("/modules")
    end
    if not fs.exists("home") then
-      fs.makeDir("home")
+      fs.makeDir("/home")
    end
    
    sleep(1)
