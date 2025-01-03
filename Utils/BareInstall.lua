@@ -124,6 +124,14 @@ local function main_install()
    if fs.exists("bin") then
       shell.run("delete","bin")
    end
+
+   if not fs.exists("modules") then
+      fs.makedir("modules")
+   end
+   if not fs.exists("home") then
+      fs.makedir("home")
+   end
+   
    sleep(1)
    fs.copy("/OS_INSTALL/install/bin","/bin")
    fs.copy("/OS_INSTALL/install/os","/os")
