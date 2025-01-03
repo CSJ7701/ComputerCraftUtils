@@ -2,14 +2,14 @@
 --- Env Vars
 local repo = settings.get("createos.repo")
 local repo_dir = settings.get("createos.module_dir")
-local repo_branch = settings.get("createos.repo_branch")
+local repo_branch = settings.get("createos.branch")
 
 if not repo or not repo_dir or not repo_branch then
    print("[ERROR] -- 'createos.repo', 'createos.branch', or 'createos.module_dir' are not set.")
    return -1
 end
 
-local src = repo .. "refs/heads/" .. branch .. repo_dir
+local src = repo .. "refs/heads/" .. repo_branch .. repo_dir
 
 --- Args
 local args = { ... }
