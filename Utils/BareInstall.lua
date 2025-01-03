@@ -125,9 +125,9 @@ local function main_install()
       shell.run("delete","bin")
    end
    sleep(1)
-   fs.copy("/disk/install/bin","/bin")
-   fs.copy("/disk/install/os","/os")
-   fs.copy("/disk/install/startup","/startup")
+   fs.copy("/OS_INSTALL/install/bin","/bin")
+   fs.copy("/OS_INSTALL/install/os","/os")
+   fs.copy("/OS_INSTALL/install/startup","/startup")
 
    ---clearDisk()
 end
