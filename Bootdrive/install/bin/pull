@@ -9,7 +9,7 @@ if not repo or not repo_dir or not repo_branch then
    return -1
 end
 
-local src = repo .. branch .. repo_dir
+local src = repo .. "refs/heads/" .. branch .. repo_dir
 
 --- Args
 local args = { ... }
@@ -19,5 +19,30 @@ if #args ~= 1 then
     return
 end
 
+module_name = args[1]
 
-r = http.get(src .. args[1])
+
+--- Functions
+--- Makes a trial request, verifies the response code, and returns the response.
+local function getAndCheck(url)
+   v.expect(1, url, "string")
+   url = url .. "?ts=" .. os.time(os.date("!*t"))
+   local r = http.get(url)
+   if r == nil then
+      error(string.format("Bad HTTP Response: %s", url))
+   end
+   local rc, _ = r.getResponseCode()
+   if rc ~= 200 then
+      error(string.format("Bad HTTP code: %d", rc))
+   end
+   return r
+end
+
+local function getEnv()
+   url = src .. module_name .. "env.json"
+   r = getAndCheck(url)
+   env = textutils.unserializeJSON(r.readAll())
+   print(env[modules][type])
+end
+
+getEnv()
