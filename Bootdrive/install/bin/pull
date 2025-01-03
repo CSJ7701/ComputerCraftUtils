@@ -1,3 +1,4 @@
+local v = require("cc.expect")
 
 --- Env Vars
 local repo = settings.get("createos.repo")
