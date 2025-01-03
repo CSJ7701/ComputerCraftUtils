@@ -111,7 +111,7 @@ local function main_install()
    end
 
    -- Fetch and download bootdrive directory
-   fetchAndDownloadDirectory(bootdriveApiUrl, basePath)
+   fetchAndDownloadDirectory(installApiUrl, basePath)
 end
 
 if clearDisk() == 1 then
