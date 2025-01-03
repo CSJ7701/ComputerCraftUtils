@@ -102,7 +102,7 @@ local function clearDisk()
    return 1
 end
 
-local function main_install()
+local function main_download()
    local basePath = "/OS_INSTALL/"
 
    -- Ensure base directory exists
@@ -114,9 +114,27 @@ local function main_install()
    fetchAndDownloadDirectory(installApiUrl, basePath)
 end
 
+local function main_install()
+   if fs.exists("startup") then
+      shell.run("delete","startup")
+   end
+   if fs.exists("os") then
+      shell.run("delete","os")
+   end
+   if fs.exists("bin") then
+      shell.run("delete","bin")
+   end
+   sleep(1)
+   fs.copy("/disk/install/bin","/bin")
+   fs.copy("/disk/install/os","/os")
+   fs.copy("/disk/install/startup","/startup")
+
+   clearDisk()
+end
+
 if clearDisk() == 1 then
    print("[LOG] -- Attempting Download")
-   main_install()
+   main_download()
 else
    print("[LOG] -- Download aborted, /OS_INSTALL could not be cleared.")
 end
