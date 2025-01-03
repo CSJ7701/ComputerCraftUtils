@@ -89,8 +89,7 @@ local function clearDisk()
 
    -- Check whether there is a disk connected
    if not (fs.exists(path)) then
-      print("[Fatal Error] -- Install path does not exist.")
-      return -1
+      fs.makeDir(path)
    else
       local files = fs.list(path)
       -- Delete all files on disk
