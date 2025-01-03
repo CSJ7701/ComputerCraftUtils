@@ -42,46 +42,46 @@ end
 
 -- Recursive function to fetch and download directory contents
 local function fetchAndDownloadDirectory(apiUrl, localPath)
-    local r = http.get(apiUrl)
-    if r == nil then
-        error("Failed to fetch directory contents from GitHub API: " .. apiUrl)
-    end
-    
-    local body = r.readAll()
-    r.close()
+   local r = http.get(apiUrl)
+   if r == nil then
+      error("Failed to fetch directory contents from GitHub API: " .. apiUrl)
+   end
+   
+   local body = r.readAll()
+   r.close()
 
-    -- Extract the base url (everything up to and including "Bootdrive")
-    local baseUrl = apiUrl:match("(.*/Bootdrive)")
-    if not baseUrl then
-       error("Unable to find 'Bootdrive' in the API URL: "..apiUrl)
-    end
+   -- Extract the base url (everything up to and including "Bootdrive")
+   local baseUrl = apiUrl:match("(.*/Bootdrive)")
+   if not baseUrl then
+      error("Unable to find 'Bootdrive' in the API URL: "..apiUrl)
+   end
 
-    -- Extract entries and download files or recurse for directories
-    for item in body:gmatch('%b{}') do
-       local itemType = item:match('"type"%s*:%s*"(%w+)"')
-       local itemName = item:match('"name"%s*:%s*"([^"]+)"')
-       local itemPath = item:match('"path"%s*:%s*"([^"]+)"')
-       local downloadUrl = item:match('"download_url"%s*:%s*"([^"]+)"')
+   -- Extract entries and download files or recurse for directories
+   for item in body:gmatch('%b{}') do
+      local itemType = item:match('"type"%s*:%s*"(%w+)"')
+      local itemName = item:match('"name"%s*:%s*"([^"]+)"')
+      local itemPath = item:match('"path"%s*:%s*"([^"]+)"')
+      local downloadUrl = item:match('"download_url"%s*:%s*"([^"]+)"')
 
-       if itemType and itemName and itemPath then
-	  local fullLocalPath = fs.combine(localPath, itemName)
-        
-	  if itemType == "file" then
-	     -- Download the file
-	     download(downloadUrl, fullLocalPath)
-	  elseif itemType == "dir" then
-	     -- Create the directory locally and recurse into it
-	     if not fs.exists(fullLocalPath) then
-                fs.makeDir(fullLocalPath)
-	     end
-	     -- Construct the API URL for the directory and fetch its contents
-	     local relativePath = itemPath:match("Bootdrive/(.+)") or itemPath
-	     local dirApiUrl = baseUrl .. "/" .. relativePath
+      if itemType and itemName and itemPath then
+	 local fullLocalPath = fs.combine(localPath, itemName)
+	 
+	 if itemType == "file" then
+	    -- Download the file
+	    download(downloadUrl, fullLocalPath)
+	 elseif itemType == "dir" then
+	    -- Create the directory locally and recurse into it
+	    if not fs.exists(fullLocalPath) then
+	       fs.makeDir(fullLocalPath)
+	    end
+	    -- Construct the API URL for the directory and fetch its contents
+	    local relativePath = itemPath:match("Bootdrive/(.+)") or itemPath
+	    local dirApiUrl = baseUrl .. "/" .. relativePath
 	    print("[LOG] -- Downloading subdirectory: "..itemName)
             fetchAndDownloadDirectory(dirApiUrl, fullLocalPath)
-	  end
-       end
-    end
+	 end
+      end
+   end
 end
 
 local function clearDisk()
@@ -133,22 +133,22 @@ local function main_install()
    fs.delete("OS_INSTALL")
 end
 
--- Dictionary of default environment variables and their values
-local env_defaults = {["createos.repo"] = "https://raw.githubusercontent.com/CSJ7701/ComputerCraftUtils", ["createos.module_dir"] = "/Modules/"}
+
 
 -- Function to check and set environment variables
 local function env_setup()
-    for var_name, default_value in pairs(env_defaults) do
-        -- Check if the variable already has a value
-       local current_value = settings.get(var_name)  -- os.getenv retrieves the environment variable value
-       if not current_value or current_value == "" then
-            -- Set the variable to the default value
-            settings.set(var_name, default_value)  -- os.setenv sets the environment variable
-            print("Set " .. var_name .. " to " .. default_value)
-        else
-            print(var_name .. " is already set to " .. current_value)
-        end
-    end
+   local env_defaults = {["createos.repo"] = "https://raw.githubusercontent.com/CSJ7701/ComputerCraftUtils", ["createos.module_dir"] = "/Modules/"}
+   for var_name, default_value in pairs(env_defaults) do
+      -- Check if the variable already has a value
+      local current_value = settings.get(var_name)  -- os.getenv retrieves the environment variable value
+      if not current_value or current_value == "" then
+	 -- Set the variable to the default value
+	 settings.set(var_name, default_value)  -- os.setenv sets the environment variable
+	 print("Set " .. var_name .. " to " .. default_value)
+      else
+	 print(var_name .. " is already set to " .. current_value)
+      end
+   end
 end
 
 if clearDisk() == 1 then
