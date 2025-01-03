@@ -1,4 +1,5 @@
 # ComputerCraftUtils
+This is a collection of modules and programs that I use to structure my OS in ComputerCraft, a Minecraft mod that adds computers to the game.
 
 
 ## Utils

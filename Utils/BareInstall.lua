@@ -133,6 +133,30 @@ local function main_install()
    fs.delete("OS_INSTALL")
 end
 
+-- Dictionary of default environment variables and their values
+local env_defaults = {
+   createos.repo = "https://raw.githubusercontent.com/CSJ7701/ComputerCraftUtils",
+   createos.module_dir = "/Modules/",
+}
+
+-- Function to check and set environment variables
+local function ensure_env_variables()
+    for var_name, default_value in pairs(env_defaults) do
+        -- Check if the variable already has a value
+       local current_value = settings.get(var_name)  -- os.getenv retrieves the environment variable value
+       if not current_value or current_value == "" then
+            -- Set the variable to the default value
+            settings.set(var_name, default_value)  -- os.setenv sets the environment variable
+            print("Set " .. var_name .. " to " .. default_value)
+        else
+            print(var_name .. " is already set to " .. current_value)
+        end
+    end
+end
+
+local function env_setup()
+   
+
 if clearDisk() == 1 then
    print("[LOG] -- Attempting Download")
    main_download()
