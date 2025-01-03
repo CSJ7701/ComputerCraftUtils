@@ -168,6 +168,7 @@ local function env_setup()
 	 settings.set(var_name, var_val)
       end
    end
+   settings.save()
 end
 
 if clearDisk() == 1 then
