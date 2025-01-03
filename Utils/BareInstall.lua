@@ -144,9 +144,9 @@ local function env_setup()
       if not current_value or current_value == "" then
 	 -- Set the variable to the default value
 	 settings.set(var_name, default_value)  -- os.setenv sets the environment variable
-	 print("Set " .. var_name .. " to " .. default_value)
+	 print("[LOG] -- Set " .. var_name .. " to " .. default_value)
       else
-	 print(var_name .. " is already set to " .. current_value)
+	 print("[LOG] -- " .. var_name .. " is already set to " .. current_value)
       end
    end
 end
