@@ -1,0 +1,23 @@
+
+--- Env Vars
+local repo = settings.get("createos.repo")
+local repo_dir = settings.get("createos.module_dir")
+local repo_branch = settings.get("createos.branch")
+
+if not repo or not repo_dir or repo_branch then
+   print("[ERROR] -- 'createos.repo', 'createos.branch', or 'createos.module_dir' are not set.")
+   return -1
+end
+
+local src = repo .. branch .. repo_dir
+
+--- Args
+local args = { ... }
+
+if #args ~= 1 then
+    print("Usage: pull 'module_name'")
+    return
+end
+
+
+r = http.get(src .. args[1])
