@@ -27,6 +27,7 @@ module_name = args[1]
 --- Makes a trial request, verifies the response code, and returns the response.
 local function getAndCheck(url)
    v.expect(1, url, "string")
+   
    url = url .. "?ts=" .. os.time(os.date("!*t"))
    local r = http.get(url)
    if r == nil then
@@ -39,11 +40,127 @@ local function getAndCheck(url)
    return r
 end
 
+--- Fetches file contents using =getAndCheck=, then writes to a file.
+local function download(url, path)
+   v.expect(1, url, "string")
+   v.expect(2, path, "string")
+
+   if (fs.exists(path)) then
+      fs.delete(path)
+   end
+
+   local r = getAndCheck(url)
+   local f = fs.open(path, 'w')
+   f.write(r.readAll())
+   f.close()
+end
+
+-- Recursive function to fetch and download directory contents
+local function fetchAndDownloadDirectory(apiUrl, localPath)
+   local r = http.get(apiUrl)
+   if r == nil then
+      error("Failed to fetch directory contents from GitHub API: " .. apiUrl)
+   end
+   
+   local body = r.readAll()
+   r.close()
+
+   -- Extract the base url (everything up to and including the module dir)
+   local baseUrl = apiUrl:match("(.*/" .. module_name .. ")")
+   if not baseUrl then
+      error("Unable to find '" .. module_name .. "' in the API URL: " .. apiUrl)
+   end
+
+   -- Extract entries and download files or recurse for directories
+   for item in body:gmatch('%b{}') do
+      local itemType = item:match('"type"%s*:%s*"(%w+)"')
+      local itemName = item:match('"name"%s*:%s*"([^"]+)"')
+      local itemPath = item:match('"path"%s*:%s*"([^"]+)"')
+      local downloadUrl = item:match('"download_url"%s*:%s*"([^"]+)"')
+
+      if itemType and itemName and itemPath then
+	 local fullLocalPath = fs.combine(localPath, itemName)
+	 
+	 if itemType == "file" then
+	    -- Download the file
+	    download(downloadUrl, fullLocalPath)
+	 elseif itemType == "dir" then
+	    -- Create the directory locally and recurse into it
+	    if not fs.exists(fullLocalPath) then
+	       fs.makeDir(fullLocalPath)
+	    end
+	    -- Construct the API URL for the directory and fetch its contents
+	    local relativePath = itemPath:match( module_name .. "/(.+)") or itemPath
+	    local dirApiUrl = baseUrl .. "/" .. relativePath
+	    print("[LOG] -- Downloading subdirectory: "..itemName)
+            fetchAndDownloadDirectory(dirApiUrl, fullLocalPath)
+	 end
+      end
+   end
+end
+
+--- Recursive function to fetch and downloads files ONLY
+local function fetchAndDownloadFiles(apiUrl, prefix)
+   local r = http.get(apiUrl)
+   if r == nil then
+      error("Failed to fetch directory contents from GitHub API: " .. apiUrl)
+   end
+
+   local body = r.readAll()
+   r.close()
+
+   -- Extract base url
+   local baseUrl = apiUrl:match("(.*/" .. module_name .. ")")
+   if not baseUrl then
+      error("Unable to find '" .. module_name .. "' in the API URL: " .. apiUrl)
+   end
+
+   -- Extract entries and download files, or recurse to download subdirectory files
+   for item in body:gmatch('%b{}') do
+      local itemType = item:match('"type"%s*:%s*"(%w+)"')
+      local itemName = item:match('"name"%s*:%s*"([^"]+)"')
+      local itemPath = item:match('"path"%s*:%s*"([^"]+)"')
+      local downloadUrl = item:match('"download_url"%s*:%s*"([^"]+)"')
+
+      if itemType and itemName and itemPath then
+	 local fullItemName = prefix .. "." .. itemName
+	 local fullLocalPath = fs.combine("/bin", fullItemName)
+
+	 if itemType == "file" then
+	    download(downloadUrl, fullLocalPath)
+	 elseif itemType == "dir" then
+	    local relativePath = itemPath:match(module_name .. "/(.+)") or itemPath
+	    local dirApiUrl = baseUrl .. "/" .. relativePath
+	    print("[LOG] -- Downloading namespace: " .. itemName)
+	    fetchAndDownloadFiles(dirApiUrl, fullLocalPath)
+	 end
+      end
+   end
+end
+
 local function getEnv()
    url = src .. module_name .. "/env.json"
    r = getAndCheck(url)
    env = textutils.unserializeJSON(r.readAll())
-   print(env.module.type)
+   return env
 end
 
-getEnv()
+local function main()
+   local env = getEnv()
+   local module_install_dir = env.module.name
+   local module_install_type = env.module.type
+
+   if module_install_type == "Module" then
+      print("This is a module")
+   elseif module_install_type == "Function" then
+      print("This is a function or collection of functions")
+   else
+      print("This is a mistake")
+   end
+end
+
+      
+      
+   
+   
+    
