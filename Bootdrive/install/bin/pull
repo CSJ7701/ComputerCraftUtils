@@ -151,14 +151,17 @@ local function main()
    local module_install_type = env.module.type
 
    if module_install_type == "Module" then
-      print("This is a module")
+      local target_dir = "/Modules/" .. module_install_dir
+      fetchAndDownloadDirectory(src, target_dir)
    elseif module_install_type == "Function" then
-      print("This is a function or collection of functions")
+      local function_prefix = module_install_dir
+      fetchAndDownloadFiles(src, function_prefix)
    else
       print("This is a mistake")
    end
 end
 
+main()
       
       
    
