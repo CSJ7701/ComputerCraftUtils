@@ -145,7 +145,7 @@ end
 
 -- Function to check and set environment variables
 local function env_setup()
-   local env_defaults = {["createos.repo"] = "https://raw.githubusercontent.com/CSJ7701/ComputerCraftUtils/", ["createos.branch"] = "main/", ["createos.module_dir"] = "Modules/"}
+   local env_defaults = {["createos.repo"] = "CSJ7701/ComputerCraftUtils", ["createos.branch"] = "main/", ["createos.module_dir"] = "Modules/"}
    local env_addons = {["shell.package_path"] = "/modules/?/init.lua"}
    
    for var_name, default_value in pairs(env_defaults) do
