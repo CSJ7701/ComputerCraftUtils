@@ -40,7 +40,7 @@ local function getAndCheck(url)
 end
 
 local function getEnv()
-   url = src .. module_name .. "env.json"
+   url = src .. module_name .. "/env.json"
    r = getAndCheck(url)
    env = textutils.unserializeJSON(r.readAll())
    print(env[modules][type])
