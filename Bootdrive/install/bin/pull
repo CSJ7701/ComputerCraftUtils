@@ -43,7 +43,7 @@ local function getEnv()
    url = src .. module_name .. "/env.json"
    r = getAndCheck(url)
    env = textutils.unserializeJSON(r.readAll())
-   print(env[modules][type])
+   print(env.modules.type)
 end
 
 getEnv()
