@@ -10,7 +10,6 @@ if not repo or not repo_dir or not repo_branch then
    return -1
 end
 
-local src = repo .. "refs/heads/" .. repo_branch .. repo_dir
 
 --- Args
 local args = { ... }
@@ -22,6 +21,8 @@ end
 
 module_name = args[1]
 
+local file_src = "https://raw.githubusercontent.com/" .. repo .. "/refs/heads/" .. repo_branch .. repo_dir
+local dir_src = "https://api.github.com/repos/" .. repo .. "/contents/" .. module_name .. "?ref=" .. repo_branch
 
 --- Functions
 --- Makes a trial request, verifies the response code, and returns the response.
@@ -139,7 +140,7 @@ local function fetchAndDownloadFiles(apiUrl, prefix)
 end
 
 local function getEnv()
-   url = src .. module_name .. "/env.json"
+   url = file_src .. module_name .. "/env.json"
    r = getAndCheck(url)
    env = textutils.unserializeJSON(r.readAll())
    return env
@@ -152,10 +153,10 @@ local function main()
 
    if module_install_type == "Module" then
       local target_dir = "/Modules/" .. module_install_dir
-      fetchAndDownloadDirectory(src, target_dir)
+      fetchAndDownloadDirectory(dir_src, target_dir)
    elseif module_install_type == "Function" then
       local function_prefix = module_install_dir
-      fetchAndDownloadFiles(src, function_prefix)
+      fetchAndDownloadFiles(file_src, function_prefix)
    else
       print("This is a mistake")
    end
