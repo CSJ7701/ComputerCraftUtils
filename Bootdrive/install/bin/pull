@@ -124,16 +124,19 @@ local function fetchAndDownloadFiles(apiUrl, prefix)
       local downloadUrl = item:match('"download_url"%s*:%s*"([^"]+)"')
 
       if itemType and itemName and itemPath then
-	 local fullItemName = prefix .. "." .. itemName
-	 local fullLocalPath = fs.combine("/bin", fullItemName)
-
-	 if itemType == "file" then
-	    download(downloadUrl, fullLocalPath)
-	 elseif itemType == "dir" then
-	    local relativePath = itemPath:match(module_name .. "/(.+)") or itemPath
-	    local dirApiUrl = baseUrl .. "/" .. relativePath
-	    print("[LOG] -- Downloading namespace: " .. itemName)
-	    fetchAndDownloadFiles(dirApiUrl, fullLocalPath)
+	 if itemName == "env.json" then
+	    print("[LOG] -- Skipping: " .. itemName)
+	 else
+	    local fullItemName = prefix .. "." .. itemName
+	    if itemType == "file" then
+	       local fullLocalPath = fs.combine("/bin", fullItemName)
+	       download(downloadUrl, fullLocalPath)
+	    elseif itemType == "dir" then
+	       local relativePath = itemPath:match(module_name .. "/(.+)") or itemPath
+	       local dirApiUrl = baseUrl .. "/" .. relativePath
+	       print("[LOG] -- Downloading namespace: " .. itemName)
+	       fetchAndDownloadFiles(dirApiUrl, fullItemName)
+	    end
 	 end
       end
    end
@@ -156,7 +159,7 @@ local function main()
       fetchAndDownloadDirectory(dir_src, target_dir)
    elseif module_install_type == "Function" then
       local function_prefix = module_install_dir
-      fetchAndDownloadFiles(file_src..module_name, function_prefix)
+      fetchAndDownloadFiles(dir_src, function_prefix)
    else
       print("This is a mistake")
    end
