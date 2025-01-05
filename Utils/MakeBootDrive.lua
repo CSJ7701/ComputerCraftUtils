@@ -117,12 +117,9 @@ local function main()
     fetchAndDownloadDirectory(bootdriveApiUrl, basePath)
 end
 
-	 
-
 if clearDisk() == 1 then
     print("[LOG] -- Attempting Download")
     main()
-    env_setup()
 else
     print("[LOG] -- Download aborted, /disk could not be cleared.")
 end
