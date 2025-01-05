@@ -21,7 +21,7 @@ end
 
 module_name = args[1]
 
-local file_src = "https://raw.githubusercontent.com/" .. repo .. "/refs/heads/" .. repo_branch .. repo_dir
+local file_src = "https://raw.githubusercontent.com/" .. repo .. "/refs/heads/" .. repo_branch .. "/" .. repo_dir
 local dir_src = "https://api.github.com/repos/" .. repo .. "/contents/" .. module_name .. "?ref=" .. repo_branch
 
 --- Functions
