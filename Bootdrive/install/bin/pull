@@ -156,7 +156,7 @@ local function main()
       fetchAndDownloadDirectory(dir_src, target_dir)
    elseif module_install_type == "Function" then
       local function_prefix = module_install_dir
-      fetchAndDownloadFiles(file_src..module_name, function_prefix)
+      fetchAndDownloadFiles(file_src.."/"..module_name, function_prefix)
    else
       print("This is a mistake")
    end
